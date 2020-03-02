@@ -7,8 +7,7 @@ public class GenerationModifier {
     
     public GenerationModifier(int numberOfGenerations, Universe universe) {
         this.numberOfGenerations = numberOfGenerations;
-        this.universe = new Universe(universe.getSize(), universe.getSeed());
-        this.universe.setMap(universe.getMap());
+        this.universe = universe;
         this.size = universe.getSize();
     }
     
@@ -16,48 +15,55 @@ public class GenerationModifier {
         boolean[][] currentState = universe.getMap();
         
         for (int i = 0; i < numberOfGenerations; i++) {
-            universe.printUniverse();
             makeNewGeneration(currentState);
-            System.out.println("---------------------");
         }
         
         return universe;
     }
     
-    private void makeNewGeneration(boolean[][] currentState) {
-        boolean[][] copy = copyArray(currentState);
+    private void makeNewGeneration(boolean[][] next) {
+        boolean[][] current = copyArray(next);
         
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                int aliveToDeadNeighboursRatio = getAliveToDeadNeighboursRatio(copy, i, j);
-                if (currentState[j][j]) {
-                    currentState[i][j] = aliveToDeadNeighboursRatio == -4 || aliveToDeadNeighboursRatio == -2;
+                int numberOfAliveNeighbours = getNumberOfAliveNeighbours(current, i, j);
+                if (next[i][j]) {
+                    next[i][j] = numberOfAliveNeighbours == 2 || numberOfAliveNeighbours == 3;
                 } else {
-                    currentState[i][j] = aliveToDeadNeighboursRatio == -2;
+                    next[i][j] = numberOfAliveNeighbours == 3;
                 }
             }
         }
     }
     
-    private int getAliveToDeadNeighboursRatio(boolean[][] currentState, int i, int j) {
-        int aliveToDeadNeighboursRatio = 0;
-        aliveToDeadNeighboursRatio = currentState[findNeighbour(i - 1)][j] ? aliveToDeadNeighboursRatio + 1
-                : aliveToDeadNeighboursRatio - 1; // North neighbour
-        aliveToDeadNeighboursRatio = currentState[findNeighbour(i - 1)][findNeighbour(j + 1)]
-                ? aliveToDeadNeighboursRatio + 1 : aliveToDeadNeighboursRatio - 1; // North-East neighbour
-        aliveToDeadNeighboursRatio = currentState[i][findNeighbour(j + 1)]
-                ? aliveToDeadNeighboursRatio + 1 : aliveToDeadNeighboursRatio - 1; // East
-        aliveToDeadNeighboursRatio = currentState[findNeighbour(i + 1)][findNeighbour(j + 1)]
-                ? aliveToDeadNeighboursRatio + 1 : aliveToDeadNeighboursRatio - 1; // South-East
-        aliveToDeadNeighboursRatio = currentState[findNeighbour(i + 1)][j] ? aliveToDeadNeighboursRatio + 1
-                : aliveToDeadNeighboursRatio - 1; // South neighbour
-        aliveToDeadNeighboursRatio = currentState[findNeighbour(i + 1)][findNeighbour(j - 1)]
-                ? aliveToDeadNeighboursRatio + 1 : aliveToDeadNeighboursRatio - 1; // South-West neighbour
-        aliveToDeadNeighboursRatio = currentState[i][findNeighbour(j - 1)]
-                ? aliveToDeadNeighboursRatio + 1 : aliveToDeadNeighboursRatio - 1; // West neighbour
-        aliveToDeadNeighboursRatio = currentState[findNeighbour(i - 1)][findNeighbour(j - 1)]
-                ? aliveToDeadNeighboursRatio + 1 : aliveToDeadNeighboursRatio - 1; // North-West neighbour
-        return aliveToDeadNeighboursRatio;
+    private int getNumberOfAliveNeighbours(boolean[][] currentState, int i, int j) {
+        int aliveNeighboursCount = 0;
+        if (currentState[findNeighbour(i - 1)][j]) { // North neighbour
+            aliveNeighboursCount++;
+        }
+        if (currentState[findNeighbour(i - 1)][findNeighbour(j + 1)]) { // North-East neighbour
+            aliveNeighboursCount++;
+        }
+        if (currentState[i][findNeighbour(j + 1)]) { // East neighbour
+            aliveNeighboursCount++;
+        }
+        if (currentState[findNeighbour(i + 1)][findNeighbour(j + 1)]) { // // South-East neighbour
+            aliveNeighboursCount++;
+        }
+        if (currentState[findNeighbour(i + 1)][j]) { // South neighbour
+            aliveNeighboursCount++;
+        }
+        if (currentState[findNeighbour(i + 1)][findNeighbour(j - 1)]) { // South-West neighbour
+            aliveNeighboursCount++;
+        }
+        if (currentState[i][findNeighbour(j - 1)]) { // West neighbour
+            aliveNeighboursCount++;
+        }
+        if (currentState[findNeighbour(i - 1)][findNeighbour(j - 1)]) { // North-West neighbour
+            aliveNeighboursCount++;
+        }
+        
+        return aliveNeighboursCount;
         
     }
     

@@ -4,14 +4,12 @@ import java.util.Random;
 
 public class Universe {
     private boolean[][] map;
-    private long seed;
     private int size;
     private Random random;
     
     public Universe(int size, long seed) {
         this.size = size;
         this.map = new boolean[size][size];
-        this.seed = seed;
         this.random = new Random(seed);
     }
     
@@ -36,16 +34,10 @@ public class Universe {
         return size;
     }
     
-    public void setMap(boolean[][] map) {
-        this.map = map;
-    }
     
     public boolean[][] getMap() {
         return map;
     }
     
-    public long getSeed() {
-        return seed;
-    }
     
 }
