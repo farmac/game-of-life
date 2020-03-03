@@ -3,19 +3,16 @@ package pl.farmac.gameoflife;
 import java.util.Scanner;
 
 public class Main {
+    private static final int NUMBER_OF_EXTRA_GENERATIONS = 50;
     private static final Scanner scanner = new Scanner(System.in);
     
     public static void main(String[] args) {
         int size = scanner.nextInt();
-        long seed = scanner.nextLong();
-        int numberOfGenerations = scanner.nextInt();
         
-        Universe universe = new Universe(size, seed);
+        Universe universe = new Universe(size);
         universe.createUniverse();
         
-        Universe newUniverse = new GenerationModifier(numberOfGenerations, universe)
-                .getNewGeneration();
-        newUniverse.printUniverse();
+        new GenerationModifier(NUMBER_OF_EXTRA_GENERATIONS, universe)
+                .getNewGenerations();
     }
-    
 }

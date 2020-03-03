@@ -1,5 +1,6 @@
 package pl.farmac.gameoflife;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class Universe {
@@ -7,10 +8,10 @@ public class Universe {
     private int size;
     private Random random;
     
-    public Universe(int size, long seed) {
+    public Universe(int size) {
         this.size = size;
         this.map = new boolean[size][size];
-        this.random = new Random(seed);
+        this.random = new Random();
     }
     
     public void createUniverse() {
@@ -21,23 +22,43 @@ public class Universe {
         }
     }
     
-    public void printUniverse() {
-        for (boolean[] row: map) {
-            for (boolean col: row) {
-                System.out.print(col ? "O" : " ");
+    public void printUniverse(int generation) {
+        System.out.println("Generation #" + generation);
+        System.out.println("Alive: " + countAliveCells());
+        for (boolean[] row : map) {
+            for (boolean col : row) {
+                System.out.print(col ? "0" : " ");
             }
             System.out.println();
         }
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+    }
+    
+    public int countAliveCells() {
+        return Arrays.stream(map)
+                .mapToInt(i -> {
+                    int count = 0;
+                    for (boolean b : i) {
+                        if (b) {
+                            count++;
+                        }
+                    }
+                    return count;
+                })
+                .sum();
     }
     
     public int getSize() {
         return size;
     }
     
-    
     public boolean[][] getMap() {
         return map;
     }
-    
     
 }
