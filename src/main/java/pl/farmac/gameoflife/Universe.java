@@ -3,29 +3,51 @@ package pl.farmac.gameoflife;
 import java.util.Arrays;
 import java.util.Random;
 
+// Model
+
 public class Universe {
-    private boolean[][] map;
+    private boolean[][] world;
     private int size;
+    private int generations;
+    private int currentGeneration;
+    private int currentlyAlive;
     private Random random;
+    private GenerationModifier generationModifier;
     
-    public Universe(int size) {
+    public Universe(int size, int generations) {
         this.size = size;
-        this.map = new boolean[size][size];
+        this.world = new boolean[size][size];
         this.random = new Random();
+        this.generations = generations;
+        createUniverse();
+        this.currentGeneration = 1;
+        this.currentlyAlive = countAliveCells();
+        this.generationModifier = new GenerationModifier(this);
+        printUniverse();
+        
     }
     
-    public void createUniverse() {
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[i].length; j++) {
-                map[i][j] = random.nextBoolean();
+    private void createUniverse() {
+        for (int i = 0; i < world.length; i++) {
+            for (int j = 0; j < world[i].length; j++) {
+                world[i][j] = random.nextBoolean();
             }
         }
     }
     
-    public void printUniverse(int generation) {
-        System.out.println("Generation #" + generation);
-        System.out.println("Alive: " + countAliveCells());
-        for (boolean[] row : map) {
+    public void getNewGenerations() {
+        while (currentGeneration < generations) {
+            generationModifier.makeNewGeneration();
+            this.currentlyAlive = countAliveCells();
+            this.currentGeneration++;
+            printUniverse();
+        }
+    }
+    
+    public void printUniverse() {
+        System.out.println("Generation #" + currentGeneration);
+        System.out.println("Alive: " + currentlyAlive);
+        for (boolean[] row : world) {
             for (boolean col : row) {
                 System.out.print(col ? "0" : " ");
             }
@@ -39,8 +61,8 @@ public class Universe {
         
     }
     
-    public int countAliveCells() {
-        return Arrays.stream(map)
+    private int countAliveCells() {
+        return Arrays.stream(world)
                 .mapToInt(i -> {
                     int count = 0;
                     for (boolean b : i) {
@@ -57,8 +79,8 @@ public class Universe {
         return size;
     }
     
-    public boolean[][] getMap() {
-        return map;
+    public boolean[][] getWorld() {
+        return world;
     }
     
 }
