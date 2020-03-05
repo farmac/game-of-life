@@ -21,7 +21,6 @@ public class UniverseController {
                 Thread.sleep(500);
             } catch (InterruptedException ignored) {
             }
-            
             universe.getNewGeneration();
         }
     }

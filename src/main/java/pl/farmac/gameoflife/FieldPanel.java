@@ -24,7 +24,7 @@ public class FieldPanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.fillRect(j, i, size, size);
                 } else {
-                    g.setColor(Color.LIGHT_GRAY);
+                    g.setColor(Color.BLACK);
                     g.drawRect(j, i, size, size);
                 }
             }

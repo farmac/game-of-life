@@ -13,6 +13,7 @@ public class Universe {
     private int currentlyAlive;
     private Random random;
     private GenerationModifier generationModifier;
+    private boolean paused;
     
     public Universe(int size, int numberOfGenerations) {
         this.size = size;
@@ -23,10 +24,11 @@ public class Universe {
         this.currentGeneration = 1;
         this.currentlyAlive = countAliveCells();
         this.generationModifier = new GenerationModifier(this);
+        this.paused = false;
         
     }
     
-    private void createUniverse() {
+    public void createUniverse() {
         for (int i = 0; i < world.length; i++) {
             for (int j = 0; j < world[i].length; j++) {
                 world[i][j] = random.nextBoolean();
@@ -35,11 +37,21 @@ public class Universe {
         printUniverse();
     }
     
+    public void pauseResume() {
+        this.paused = !paused;
+    }
+    
+    public void setCurrentGeneration(int currentGeneration) {
+        this.currentGeneration = currentGeneration;
+    }
+    
     public void getNewGeneration() {
-        generationModifier.makeNewGeneration();
-        this.currentlyAlive = countAliveCells();
-        this.currentGeneration++;
-        printUniverse();
+        if (!paused) {
+            generationModifier.makeNewGeneration();
+            this.currentlyAlive = countAliveCells();
+            this.currentGeneration++;
+            printUniverse();
+        }
     }
     
     public void printUniverse() {
