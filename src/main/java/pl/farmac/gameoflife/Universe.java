@@ -8,22 +8,21 @@ import java.util.Random;
 public class Universe {
     private boolean[][] world;
     private int size;
-    private int generations;
+    private int numberOfGenerations;
     private int currentGeneration;
     private int currentlyAlive;
     private Random random;
     private GenerationModifier generationModifier;
     
-    public Universe(int size, int generations) {
+    public Universe(int size, int numberOfGenerations) {
         this.size = size;
         this.world = new boolean[size][size];
         this.random = new Random();
-        this.generations = generations;
+        this.numberOfGenerations = numberOfGenerations;
         createUniverse();
         this.currentGeneration = 1;
         this.currentlyAlive = countAliveCells();
         this.generationModifier = new GenerationModifier(this);
-        printUniverse();
         
     }
     
@@ -33,15 +32,14 @@ public class Universe {
                 world[i][j] = random.nextBoolean();
             }
         }
+        printUniverse();
     }
     
-    public void getNewGenerations() {
-        while (currentGeneration < generations) {
-            generationModifier.makeNewGeneration();
-            this.currentlyAlive = countAliveCells();
-            this.currentGeneration++;
-            printUniverse();
-        }
+    public void getNewGeneration() {
+        generationModifier.makeNewGeneration();
+        this.currentlyAlive = countAliveCells();
+        this.currentGeneration++;
+        printUniverse();
     }
     
     public void printUniverse() {
@@ -53,15 +51,9 @@ public class Universe {
             }
             System.out.println();
         }
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
     }
     
-    private int countAliveCells() {
+    public int countAliveCells() {
         return Arrays.stream(world)
                 .mapToInt(i -> {
                     int count = 0;
@@ -83,4 +75,11 @@ public class Universe {
         return world;
     }
     
+    public int getNumberOfGenerations() {
+        return numberOfGenerations;
+    }
+    
+    public int getCurrentGeneration() {
+        return currentGeneration;
+    }
 }
