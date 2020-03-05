@@ -1,4 +1,4 @@
-#The Game of Life
+## The Game of Life
 
 This is my first GUI application.  It follows the MVC design pattern. 
 
